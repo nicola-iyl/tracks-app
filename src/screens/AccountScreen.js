@@ -1,11 +1,19 @@
-import React from "react";
+import React, {useContext} from "react";
 import {View,Text,StyleSheet} from "react-native";
+import {Button} from "react-native-elements";
+import Spacer from "../components/Spacer";
+import {Context as AuthContext} from "../context/AuthContext";
 
 const AccountScreen = () => {
+    const { logout } = useContext(AuthContext);
     return(
-        <View>
+        <>
             <Text style={styles.text}>Account Screen</Text>
-        </View>
+            <Spacer>
+                <Button title="Logout" onPress={() => logout} />
+            </Spacer>
+            
+        </>
     );
 };
 

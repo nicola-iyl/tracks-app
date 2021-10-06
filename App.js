@@ -9,11 +9,13 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import TrackCreateScreen from "./src/screens/TrackCreateScreen";
 import TrackDetailsScreen from "./src/screens/TrackDetailsScreen";
 import TrackListScreen from "./src/screens/TrackListScreen";
+import LoadingScreen from "./src/screens/LoadingScreen";
 
 import { Provider as AuthProvider } from "./src/context/AuthContext";
 import {setNavigator, SetNavigator} from "./src/navigationRef";
 
 const switchNavigator = createSwitchNavigator({
+  Loading: LoadingScreen,
   loginFlow: createStackNavigator({
     Register: RegisterScreen,
     Login: LoginScreen

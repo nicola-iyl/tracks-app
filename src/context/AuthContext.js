@@ -8,7 +8,11 @@ const authReducer = (state, action) => {
         case 'login':
             return {errorMessage:'', token:action.payload };
         case 'add_error':
-            return {...state, errorMessage: action.payload};
+            return {...state, errorMessage: action.payload };
+        case 'clear_error_msg':
+            return {...state, errorMessage: ''};
+        case 'logout':
+            return {token:null,errorMessage:''};
         default:
             return state;
     }
@@ -35,6 +39,8 @@ const authReducer = (state, action) => {
 const register = dispatch => async ({email,password}) => {
     // faccio un API request per Registrarsi con questa email e password
     try{
+        //console.log(email);
+        //console.log(password);
         const response = await trackerApi.post('/signup',{ email, password });
         //console.log(response.data);
         await AsyncStorage.setItem('token',response.data.token);
@@ -50,19 +56,48 @@ const register = dispatch => async ({email,password}) => {
 };
 
 const login = (dispatch) => {
-    return ({email, password}) => {
-
+    return async ({email, password}) => {
+        try{
+            const response = await trackerApi.post('/signin',{ email, password });
+            await AsyncStorage.setItem('token',response.data.token);
+            dispatch({type:'login', payload:response.data.token});
+            navigate('TrackList');
+        }
+        catch(err){
+            dispatch({type:'add_error', payload: "Error: Something went wrong!"});
+        }
     };
 };
 
-const logout = (dispatch) => {
-    return () => {
+const isGiaLoggato = dispatch => async() => {
+    const token = await AsyncStorage.getItem('token');
+    if(token){
+        dispatch({type:'login',payload:token});
+        navigate('TrackList');
+    }
+    else{
+        navigate('Login');
+    }
+}
 
+const clearErrorMessage = (dispatch) => {
+    return () => {
+        dispatch( {type:'clear_error_msg'} );
+    }
+    
+}
+
+const logout = (dispatch) => {
+    console.log('logout');
+    return async () => {
+        await AsyncStorage.removeItem('token');
+        dispatch({type:'logout'});
+        navigate('LoginFlow')
     };
 };
 
 export const {Provider, Context} = createDataContext(
     authReducer,
-    {register, login, logout},
+    {register, login, logout, clearErrorMessage, isGiaLoggato},
     { token : null, errorMessage : ''}
 );
