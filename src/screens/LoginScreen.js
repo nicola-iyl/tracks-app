@@ -10,7 +10,7 @@ const LoginScreen = () => {
     return(
         <View style={styles.container}>
             <NavigationEvents 
-                onWillFocus = { () => clearErrorMessage } //posso anche scrivere onWillBlur = { clearErrorMessage }
+                onWillFocus = { () => clearErrorMessage() } //posso anche scrivere onWillBlur = { clearErrorMessage }
             />
             <AuthForm 
                 headerText="Login per Tracker"

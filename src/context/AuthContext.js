@@ -18,6 +18,20 @@ const authReducer = (state, action) => {
     }
 };
 
+const logout = (dispatch) => {
+
+    return async () => {
+        try{
+            await AsyncStorage.removeItem('token');
+            dispatch({type:'logout'});
+            navigate('loginFlow');
+        }catch(err){
+            console.log(err.message);
+        }
+        
+    };
+};
+
 /*const register = (dispatch) => {
     return async ({email,password}) => {
         // faccio un API request per Registrarsi con questa email e password
@@ -64,6 +78,7 @@ const login = (dispatch) => {
             navigate('TrackList');
         }
         catch(err){
+            console.log(err.message);
             dispatch({type:'add_error', payload: "Error: Something went wrong!"});
         }
     };
@@ -87,14 +102,7 @@ const clearErrorMessage = (dispatch) => {
     
 }
 
-const logout = (dispatch) => {
-    console.log('logout');
-    return async () => {
-        await AsyncStorage.removeItem('token');
-        dispatch({type:'logout'});
-        navigate('LoginFlow')
-    };
-};
+
 
 export const {Provider, Context} = createDataContext(
     authReducer,
