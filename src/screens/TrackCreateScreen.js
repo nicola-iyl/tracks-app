@@ -1,59 +1,29 @@
 import "../_mockLocation";
-import React, {useEffect, useState} from "react";
+import React, {useContext} from "react";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-elements";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView} from "react-navigation";
 import Map from "../components/Map";
-import { requestForegroundPermissionsAsync } from 'expo-location';
+import { Context as LocationContext } from "../context/LocationContext";
+import useLocation from "../hooks/useLocation";
 
 const TrackCreateScreen = () => {
 
-    const [err, setErr] = useState(null);
+    const { addLocation } = useContext(LocationContext);
 
-    const startWatching = async () => {
-        try {
-            const { granted } = await requestForegroundPermissionsAsync();
-            if (!granted) {
-                console.log('non consentito');
-                throw new Error('Location permission not granted');
-            }
-        } catch (e) {
-            console.log('non consentito b');
-            setErr(e);
-        }
-    }
+    const [err] = useLocation((location) => addLocation(location));
 
-    useEffect(()=>{
-        startWatching();
-    },
-    []);
-
-    return(
-        <SafeAreaView forceInset={{top:'always'}}>
+    return (
+        <SafeAreaView>
             <Text h2>Create a Track</Text>
             <Map />
             {err ? <Text>Perfavore autorizza la localizzazione </Text> : null}
         </SafeAreaView>
     );
+
 };
 
-const styles = StyleSheet.create({
-    
-});
+const styles = StyleSheet.create({});
 
 export default TrackCreateScreen;
 
-/*const startWatching = async () => {
-    try {
-      const { granted } = await requestPermissionsAsync();
-      if (!granted) {
-        throw new Error('Location permission not granted');
-      }
-    } catch (e) {
-      setErr(e);
-    }
-  };*/
-
-  /*
-  const { granted } = await requestForegroundPermissionsAsync();
-  */
