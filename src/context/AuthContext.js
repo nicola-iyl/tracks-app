@@ -71,15 +71,17 @@ const register = dispatch => async ({email,password}) => {
 
 const login = (dispatch) => {
     return async ({email, password}) => {
+        
         try{
             const response = await trackerApi.post('/signin',{ email, password });
+            
             await AsyncStorage.setItem('token',response.data.token);
             dispatch({type:'login', payload:response.data.token});
             navigate('TrackList');
         }
         catch(err){
             console.log(err.message);
-            dispatch({type:'add_error', payload: "Error: Something went wrong!"});
+            dispatch({type:'add_error', payload: "Error: Something went wrongs!"});
         }
     };
 };
